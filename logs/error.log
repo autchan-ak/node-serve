@@ -1,0 +1,38 @@
+[2023-04-15T20:59:21.915] [ERROR] error - {"name":"SequelizeConnectionError","parent":{"code":"ER_BAD_DB_ERROR","errno":1049,"sqlState":"42000","sqlMessage":"Unknown database 'mg_blog'"},"original":{"code":"ER_BAD_DB_ERROR","errno":1049,"sqlState":"42000","sqlMessage":"Unknown database 'mg_blog'"}}
+[2023-04-15T20:59:52.233] [ERROR] error - {"name":"SequelizeConnectionError","parent":{"code":"ER_BAD_DB_ERROR","errno":1049,"sqlState":"42000","sqlMessage":"Unknown database 'mg_blog'"},"original":{"code":"ER_BAD_DB_ERROR","errno":1049,"sqlState":"42000","sqlMessage":"Unknown database 'mg_blog'"}}
+[2023-04-15T21:02:38.939] [ERROR] error - {"name":"SequelizeConnectionError","parent":{"code":"ER_BAD_DB_ERROR","errno":1049,"sqlState":"42000","sqlMessage":"Unknown database 'mg_blog'"},"original":{"code":"ER_BAD_DB_ERROR","errno":1049,"sqlState":"42000","sqlMessage":"Unknown database 'mg_blog'"}}
+[2023-04-15T21:07:24.391] [ERROR] error - {"name":"SequelizeConnectionError","parent":{"code":"ER_BAD_DB_ERROR","errno":1049,"sqlState":"42000","sqlMessage":"Unknown database 'mg_blog'"},"original":{"code":"ER_BAD_DB_ERROR","errno":1049,"sqlState":"42000","sqlMessage":"Unknown database 'mg_blog'"}}
+[2023-04-15T21:07:44.824] [ERROR] error - {"name":"SequelizeConnectionError","parent":{"code":"ER_BAD_DB_ERROR","errno":1049,"sqlState":"42000","sqlMessage":"Unknown database 'mg_blog'"},"original":{"code":"ER_BAD_DB_ERROR","errno":1049,"sqlState":"42000","sqlMessage":"Unknown database 'mg_blog'"}}
+[2023-04-15T21:08:35.257] [ERROR] error - {"name":"SequelizeConnectionError","parent":{"code":"ER_BAD_DB_ERROR","errno":1049,"sqlState":"42000","sqlMessage":"Unknown database 'mg_blog'"},"original":{"code":"ER_BAD_DB_ERROR","errno":1049,"sqlState":"42000","sqlMessage":"Unknown database 'mg_blog'"}}
+[2023-04-16T13:26:53.702] [ERROR] error - {"name":"SequelizeConnectionAcquireTimeoutError","parent":{},"original":{}}
+[2023-04-16T15:35:42.846] [ERROR] error - {}
+[2023-04-16T15:40:54.993] [ERROR] error - 密码错误
+[2023-04-16T15:46:26.679] [ERROR] error - {}
+[2023-04-16T15:46:46.377] [ERROR] error - 密码错误
+[2023-04-16T16:02:09.188] [ERROR] error - 密码错误
+[2023-04-16T16:15:48.263] [ERROR] error - 密码错误
+[2023-04-16T16:17:59.663] [ERROR] error - 密码错误
+[2023-04-16T16:18:14.055] [ERROR] error - 密码错误
+[2023-04-16T16:26:31.546] [ERROR] error - 密码错误
+[2023-04-20T19:16:53.305] [ERROR] error - POST /api/private/roles/one *** 响应：{"data":null,"code":401,"message":"jwt expired"}
+[2023-04-20T19:16:53.311] [ERROR] error - POST /api/private/roles/one *** 响应：{"data":null,"code":401,"message":"jwt expired"}
+[2023-04-20T19:17:00.758] [ERROR] error - POST /api/private/roles/one *** 响应：{"data":null,"code":401,"message":"jwt expired"}
+[2023-04-20T19:17:00.761] [ERROR] error - POST /api/private/roles/one *** 响应：{"data":null,"code":401,"message":"jwt expired"}
+[2023-04-20T19:17:08.972] [ERROR] error - 密码错误
+[2023-04-20T19:17:23.721] [ERROR] error - {}
+[2023-04-20T19:17:29.919] [ERROR] error - {}
+[2023-04-20T19:18:03.880] [ERROR] error - 密码错误
+[2023-04-20T19:18:12.507] [ERROR] error - 密码错误
+[2023-04-20T19:19:12.457] [ERROR] error - 密码错误
+[2023-04-20T19:21:05.272] [ERROR] error - 密码错误
+[2023-04-20T19:21:44.961] [ERROR] error - 密码错误
+[2023-04-20T22:32:59.693] [ERROR] error - POST /api/private/visitor/list *** 响应：{"data":null,"code":401,"message":"jwt expired"}
+[2023-04-21T20:37:54.247] [ERROR] error - POST /api/private/users/list *** 响应：{"data":null,"code":401,"message":"jwt expired"}
+[2023-04-21T23:57:57.063] [ERROR] error - POST /api/private/users/list *** 响应：{"data":null,"code":401,"message":"jwt expired"}
+[2023-04-21T23:58:28.544] [ERROR] error - POST /api/private/users/list *** 响应：{"data":null,"code":401,"message":"jwt expired"}
+[2023-04-21T23:58:29.917] [ERROR] error - POST /api/private/users/list *** 响应：{"data":null,"code":401,"message":"jwt expired"}
+[2023-04-22T01:32:29.556] [ERROR] error - {}
+[2023-04-22T04:36:02.062] [ERROR] error - POST /api/private/visitor/list *** 响应：{"data":null,"code":401,"message":"jwt expired"}
+[2023-04-22T04:59:46.300] [ERROR] error - {}
+[2023-04-22T05:00:06.245] [ERROR] error - {}
+[2023-04-22T05:00:34.961] [ERROR] error - 密码错误
