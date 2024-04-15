@@ -1,7 +1,7 @@
 /**
  * 通过crypto-js实现 加解密工具
  * AES、HASH(MD5、SHA256)、base64
- * @author: zhouyi
+ * @author: 阿坤
  */
 const CryptoJS = require("crypto-js");
 

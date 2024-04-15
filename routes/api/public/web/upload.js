@@ -8,16 +8,14 @@ const multer = require('multer');
 // 临时上传目录
 let upload = multer({dest: 'uploads_files'});
 
-let baseURL = require('../../../../config/upload.config').baseURL;
+let baseURL = require('../../../../config/index').baseURL;
 
 /**
  * 提供文件上传服务
  * @route POST /api/public/web/upload
- * @group 文件上传（公共） - 上传图片接口
- * @param {file} file.query.required - 图片
+ * @group 公共免登录接口
+ * @param {file} file.query.required 
  * @returns {object} 200 - 返回结果对象：文件地址 url，暂存地址 tmp_path
- * @returns {object} 605 - 请求失败
- * @returns {Error}  default - Unexpected error
  */
 router.post("/", upload.single('file'), function (req, res, next) {
     let fileExtArray = req.file.originalname.split(".");

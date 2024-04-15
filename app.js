@@ -1,5 +1,6 @@
 
 const express = require('express')
+const getPublicIP = require('./utils/utils.ip')
 const bodyParser = require('body-parser')
 const path = require('path')
 const chalk = require('chalk'); // https://www.npmjs.com/package/chalk
@@ -19,11 +20,11 @@ const session = require('express-session')
 
 //用来设置签名密钥
 app.use(session({
-    secret: "WickYo",	// 对cookie进行签名
+    secret: "AUTCHAN_tadpole",	// 对cookie进行签名
     name: "session",	// cookie名称，默认为connect.sid
     resave: false,	// 强制将会话保存回会话容器
     rolling: false,	// 强制在每个response上设置会话标识符cookie
-    saveUninitialized: false, 
+    saveUninitialized: true,
     cookie: {
         // 3天验证码过期
         maxAge: 300000
@@ -33,7 +34,7 @@ app.use(session({
 
 //处理请求参数解析
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({ extended: false }))
 
 const db = require("./models");
 db.sequelize.sync();
@@ -48,7 +49,8 @@ app.all('/api/*', function (req, res, next) {
     res.header('Access-Control-Allow-Headers', 'X-Requested-With, Authorization')
     res.header('Content-Type', 'application/json;charset=UTF-8')
     res.header('Access-Control-Allow-Headers', 'Content-Type,Content-Length, Authorization, Accept,X-Requested-With')
-    res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS')
+    // res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS')
+    res.header('Access-Control-Allow-Methods', 'POST,GET')
     if (req.method == 'OPTIONS') res.send(200)
     /*让options请求快速返回*/
     else next()
@@ -73,11 +75,11 @@ app.use('/api/private/*', admin_passport.permissionAuth)
 app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
         logger.error(`${req.method} ${req.baseUrl + req.path} *** 响应：${JSON.stringify({
-            data: null,
             code: err.status || 401,
-            message: err.message || 'token错误'
+            message:'您没有访问权限！',
+            ip:getPublicIP(req)
         })}`);
-        res.status(401).send({data: null, code: err.status || 401, message: err.message || 'token错误'})
+        res.status(401).sendResultAto(null, 401,'您没有访问权限！');
     }
 })
 
@@ -86,7 +88,7 @@ mount(app, path.join(process.cwd(), '/routes'), false)
 
 // 处理无响应 如果没有路径处理就返回 Not Found
 app.use(function (req, res, next) {
-    res.status(404).sendResult({data: null, code: 404, message: 'Not Found'})
+    res.status(404).sendResult({ data: null, code: 404, message: 'Not Found' })
 })
 app.listen(process.env.DEV_PORT, () => {
     console.log(chalk.bold.green(`项目启动成功: ${process.env.DEV_URL}:${process.env.DEV_PORT}`));

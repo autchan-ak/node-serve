@@ -1,12 +1,20 @@
 const expressJwt = require('express-jwt')
+const getPublicIP = require('./utils.ip')
+const visits = require('./utils.visits')
 const db = require("../models");
-const Users = db.users
+const DAO = require("../dao/DAO");
 const Roles = db.roles
 const Menus = db.menus
 const rolesMenus = db.rolesMenus
 const logger = require("./utils.logger");
-const whitelist = require("./utils.whitelist");
+const { whitelist, routes } = require("./utils.whitelist");
+const { notifyRobot } = require("./utils.tools");
 const chalk = require("chalk");
+const CONFIG = require('../config/index')
+
+// 当前用户路由信息
+let userRoutes = {}
+
 /**
  * token验证函数
  *
@@ -14,9 +22,7 @@ const chalk = require("chalk");
  * @param  {[type]}   res  响应对象
  * @param  {Function} next 传递事件函数
  */
-
-
-exports.tokenAuth =expressJwt({
+exports.tokenAuth = expressJwt({
     secret: process.env["SIGN_KEY"],
     algorithms: ['HS256'],
     credentialsRequired: true, //对没有携带token的 接口不抛出错误
@@ -43,59 +49,63 @@ Menus.belongsToMany(Roles, {
     through: {
         model: rolesMenus,
         unique: false,
-    }, foreignKey: 'menuIds',
+    }, foreignKey: 'menuId',
 });
 
-exports.permissionAuth = (req, res, next) => {
-    // console.log('**********',req.user)
-    // {
-    //     username: 'editor',
-    //     password: '123456',
-    //     admin: true,
-    //     iat: 1653796175,
-    //     exp: 1654055375
-    // }
-    const userInfo = req.user
-    //请求的接口
+exports.permissionAuth = async (req, res, next) => {
     const reqPath = `${req.method} ${req.baseUrl}`
-
+    const userInfo = req.user, user_ip = getPublicIP(req)
+    // 如果是超级管理员跳过校验
+    // if (Config.supertube.includes(userInfo.roleId)) return next();
+    if (userInfo.roleId.includes(CONFIG.superAdminUserId)) return next();
+    //请求的接口
+    if (whitelist.includes(reqPath.toLowerCase())) {
+        console.log(chalk.bold.green(`【白名单内通过】 ${userInfo.userAccount} 请求 ${req.method} ${req.baseUrl + req.path} *** 权限验证通过`))
+        next()
+        return
+    }
     try {
-        //查询该用户信息
-        Users.findOne({where: {username: userInfo.username}}).then(singUser => {
-            let pm = {
-                where: {id: singUser.roleId},
-                raw: false, //是否开启原生查询   true 结果：tag.tag_name  false 结果：'tag':{"tag_name": "标签",}
-                include: [
-                    {model: Menus},
-                ]
+        // 查询是否有缓存
+        if (userRoutes[userInfo.userId] && userRoutes[userInfo.userId].end > +new Date()) {
+            if (!userRoutes[userInfo.userId].path.includes(reqPath.toLowerCase())) {
+                logger.error(`【未通过】 ${userInfo.userAccount} 请求 ${req.method} ${req.baseUrl + req.path} *** 权限未验证通过    ip : ${user_ip}`);
+                return res.sendResultAto('', 604, '您没有该权限访问,请联系管理员配置该权限')
             }
-            Roles.findOne(pm).then(singRole => {
-                let userMenus = singRole.menus || []
-                let preMenus = [...whitelist]
+            console.log(chalk.bold.green(`【通过】 ${userInfo.userAccount} 请求 ${req.method} ${req.baseUrl + req.path} *** 权限验证通过`));
 
-                //整理用户所有权限标识 ["POST /api/..."]
-                for (const userMenu of userMenus) {
-                    if (userMenu.authority) {
-                        preMenus.push(userMenu.authority)
-                    }
+            return next()
+        }
+        // 查询该用户是否有权限访问
+        DAO.list(Roles, { raw: false, include: [{ model: Menus ,where: {record_state: 0 }}], params: { id: userInfo.roleId } }, data => {
+            // 将多个启用的角色路由组装成一个
+            let Menus = [], roles = JSON.parse(JSON.stringify(data.data.data)), preMenus = [];
+            roles.forEach(item => {
+                if (!item.state) {
+                    Menus = Menus.concat(item.menus)
                 }
-                //用户请求的该接口是否有权限访问
-                if (!preMenus.includes(reqPath)) {
-                    logger.error(`【未通过】 ${userInfo.username} 请求 ${req.method} ${req.baseUrl + req.path} *** 权限未验证通过`);
-                    res.sendResultAto('', 604, '未有该接口权限访问,请重新配置该用户权限')
-                }
-                // res.status(200).sendResultAto(reqPath, 200, '权限验证通过')
-                whitelist.includes(reqPath) ?
-                    console.log(chalk.bold.yellow(`【白名单内通过】 ${userInfo.username} 请求 ${req.method} ${req.baseUrl + req.path} *** 权限验证通过`))
-                    :
-                    console.log(chalk.bold.green(`【通过】 ${userInfo.username} 请求 ${req.method} ${req.baseUrl + req.path} *** 权限验证通过`));
-
-                next()
             })
+            // Menus去重
+            Menus.forEach(item => {
+                if (preMenus.includes(item.path.toLowerCase())) return;
+                preMenus.push(item.path.toLowerCase());
+            })
+            // 存入缓存
+            userRoutes[userInfo.userId] = {
+                path: preMenus,
+                end: +new Date() + 1000 * 60 * 30
+            }
+            if (!preMenus.includes(reqPath.toLowerCase())) {
+                logger.error(`【未通过】 ${userInfo.userAccount} 请求 ${req.method} ${req.baseUrl + req.path} *** 权限未验证通过    ip : ${user_ip}`);
+                return res.sendResultAto('', 604, '您没有该权限访问,请联系管理员配置该权限')
+            }
+            console.log(chalk.bold.green(`【通过】 ${userInfo.userAccount} 请求 ${req.method} ${req.baseUrl + req.path} *** 权限验证通过`));
+
+            next()
         })
     } catch (err) {
+        console.log('err=====', err);
         //在此处理错误
-        logger.error(`${userInfo.username} 请求 ${req.method} ${req.baseUrl + req.path} *** 权限未验证通过`);
+        logger.error(`${userInfo.userAccount} 请求 ${req.method} ${req.baseUrl + req.path} *** 权限未验证通过    ip : ${user_ip}`);
         res.status(401).sendResultAto(err, 401, '接口权限验证错误')
     }
 

@@ -15,13 +15,16 @@ function resExtra(data, code = 200, message = '操作成功！') {
 //查询列表条件处理
 function queryConditions(conditions, count) {
     let queryCon = {
-        where: {},
+        where: {
+            record_state: 0 ,
+        },
         // limit:500,
         // offset:0,
     }
 
     if (conditions.params) {
-        queryCon.where = utilsTools.deleteNullObj(conditions.params)
+        queryCon.where = utilsTools.deleteNullObj(conditions.params);
+        queryCon.where.record_state = 0;
     }
     //每页条数
     if (conditions.limit) {
@@ -185,10 +188,10 @@ const sqlOpt = {
      * @param  {Function} cb          回调函数
      */
     delete: (model, key, cb) => {
-        /*key={
-            id:body.id
-        }*/
-        model.destroy({where: key}).then(data => {
+        /**
+         * 修改 record_state 为 1
+         */
+        model.update({record_state:1},{where: key}).then(data => {
             if (data) {
                 cb(resExtra(data, 200, '删除成功！'))
             } else {
@@ -223,11 +226,11 @@ const sqlOpt = {
      * @param  {String} sql           原始sql语句
      * @param  {Function} cb          回调函数
      */
-    doQuery: (sql, cb) => {
+    doQuery:(sql,cb)=>{
         // sql = 'SELECT * FROM `tutorials`'
         db.sequelize.query(sql).then(data => {
-            cb(resExtra(data, 200, '查询成功！'))
-        }).catch(err => {
+            cb(resExtra(data,200,'查询成功！'))
+        }).catch(err=>{
             logger.error(JSON.stringify(err))
             cb(resExtra('', 605, '查询失败!'))
         })

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Visitor = require("../../../controllers/visitor.controller");
+const Visitor = require("../../../controllers/sys-log_visitor.controller");
 
 /**
  * 创建关于访客信息

@@ -28,18 +28,6 @@ log4js.configure({
     }
 });
 
-// logger.trace("Entering cheese testing");
-// logger.debug("Got cheese.");
-// logger.info("Cheese is Comté.");
-// logger.warn("Cheese is quite smelly.");
-// logger.error("Cheese is too ripe!");
-// logger.fatal("Cheese was breeding ground for listeria.");
-// exports.logger = function (level) {
-//     var logger = log4js.getLogger("失败");
-//     logger.level = 'debug';
-//     return logger;
-// };
-
 /**
  * 日志输出 level为bug
  * @param { string } content

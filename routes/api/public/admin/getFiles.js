@@ -4,15 +4,12 @@ var path = require("path");
 let router = express.Router();
 const logger = require("../../../../utils/utils.logger");
 /**
- *@author ZY
- *@date 2022/3/6 17:58
  *@Description:预览图片接口
  *@params {id} string 图片名称带有后缀名
  */
 router.get("/",
     async (req, res, next) => {
         try {
-            // console.log(req.query)
             let id = req.query.id
             let mimetype = req.query.mimetype
             const filePath = path.resolve(process.cwd(), `uploads_files/${id}`);
@@ -31,8 +28,6 @@ router.get("/",
     })
 
 /**
- *@author ZY
- *@date 2022/3/6 17:58
  *@Description:下载文件接口
  *@params {name} string 文件名称带有后缀名
  */

@@ -1,8 +1,8 @@
 module.exports = {
-    HOST: "localhost",
+    HOST: "127.0.0.1",
     USER: "root",
     PASSWORD: "",
-    DB: "mg_blog",
+    DB: "cloud-warehouse",
     dialect: "mysql",
     pool: {
         max: 10,

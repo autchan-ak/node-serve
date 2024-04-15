@@ -8,9 +8,9 @@ const xlsx = require('node-xlsx').default
 
 
 /**
- * 导入excel文件进行入库
+ * 导入excel文件进行入库——废弃
  * @route POST /api/public/common/excelToRaw/import
- * @group 导入excel文件（公共） - list of import
+ * @group 公共免登录接口
  * @param {object} query - 请按固定查询规范
  * @returns {object} 200 - An array of Friends info
  * @returns {object} 605 - 请求失败
@@ -27,12 +27,9 @@ const xlsx = require('node-xlsx').default
 // });
 
 /**
- *@author ZY
- *@date 2022/3/6 17:58
- *@Description:下载excel文件模板接口
- * 导入excel文件进行入库
+ *下载excel文件模板接口
  * @route POST /api/public/common/downloadTemplate
- * @group 下载excel文件模板接口（公共） - list of downloadTemplate
+ * @group 公共免登录接口
  *@params {name} string 文件名称带有后缀名
  */
 

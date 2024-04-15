@@ -8,7 +8,7 @@ const multer = require('multer');
 // 临时上传目录
 let upload = multer({dest: 'uploads_files'});
 
-let baseURL = require('../../../config/upload.config').baseURL;
+let baseURL = require('../../../config/index').baseURL;
 
 /**
  * 提供文件上传服务
