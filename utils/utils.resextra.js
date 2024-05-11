@@ -7,7 +7,7 @@ module.exports = function (req, res, next) {
 		if (fmt == "rest") {
 			res.json(
 				{
-					"data": obj.data,
+					"data": type=='error'?null:obj.data,
 					"meta": {
 						"msg": obj.message,
 						"status": obj.code,
@@ -23,7 +23,7 @@ module.exports = function (req, res, next) {
 		if (fmt == "rest") {
 			res.json(
 				{
-					data,
+					data:type=='error'?null:data,
 					"meta": {
 						"msg": message,
 						"status": code,

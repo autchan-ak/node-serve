@@ -328,6 +328,6 @@ exports.reclassify = (req, res) => {
             })
         })
     }).catch(err => {
-        if (!pm.content) return res.sendResult({ data: '', code: 605, message: "旧密码不正确！" })
+        res.sendResult({ data: '', code: 605, message: "旧密码不正确！" })
     })
 }

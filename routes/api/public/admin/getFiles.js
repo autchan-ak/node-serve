@@ -18,7 +18,7 @@ router.get("/",
             //格式必须为 binary 否则会出错
             let content = fs.readFileSync(filePath, "binary");
             if (!content) {
-                res.sendResult({data:'',code:400,message:"资源不存在"});
+                res.sendResult({data:'',code:404,message:"资源不存在"});
             }
             res.write(content, "binary"); //格式必须为 binary，否则会出错
             res.end();

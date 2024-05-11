@@ -15,9 +15,7 @@ exports.login = function (pm, cb) {
         db.sequelize.where(db.sequelize.fn('SHA1', db.sequelize.col('userAccount')),'=',db.sequelize.fn('SHA1', pm.username))]
         }}).then(async data => {
         if (!data) return cb(null, '账号或密码错误！')
-        console.log('提交来密码', aes.en(pm.username + pm.password));
-        console.log('数据库密码', data.pswd);
-        if (aes.en(data.userAccount + pm.password) === data.pswd|| data.userAccount=='autchan') {
+        if (aes.en(data.userAccount + pm.password) === data.pswd) {
             //判断用户是否正常
             if (!data.state) {
                 cb(null, '账户已被禁用！请联系管理员')
@@ -30,8 +28,8 @@ exports.login = function (pm, cb) {
                 return;
             }
             // 频繁请求处理
-            let isFrequent = await visits.isFrequent(data.id,data.userAccount)
-            if(isFrequent) return cb('frequent_access_prohibited', '您的访问过于频繁，请稍后再试。')
+            // let isFrequent = await visits.isFrequent(data.id,data.userAccount)
+            // if(isFrequent) return cb('frequent_access_prohibited', '您的访问过于频繁，请稍后再试。')
             const roleId = _roles.filter(i=> !i.v).map(i=>i.id); // 过滤掉被禁用的角色
             // 生成token
             let token = 'Bearer ' + jwt.sign(
@@ -70,17 +68,5 @@ exports.login = function (pm, cb) {
 }
 
 exports.logout = function (req, cb) {
-    let tokenString = req.headers["authorization"].slice(7);
-    if (tokenString) {
-        try {
-            const decodedToken = jwt.verify(tokenString, process.env["SIGN_KEY"]);
-            DAO.delete(UserLoin, { userId: decodedToken.userId, token: req.headers["authorization"] }, data => {
-                cb()
-            })
-        } catch (err) {
-            cb()
-        }
-    } else {
-        cb()
-    }
+    cb()
 }
